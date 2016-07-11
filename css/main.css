@@ -1,0 +1,10 @@
+.list-group-item input[type=text] {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.completado {
+    text-decoration: line-through;
+    font-style: italic;
+    color: gray;
+}
