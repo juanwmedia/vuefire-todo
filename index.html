@@ -49,14 +49,14 @@
                                 class="btn btn-default btn-xs">
                             <span class="glyphicon glyphicon-floppy-saved"></span>
                         </button>
-                        <button @click="tarea.completado = true"
+                        <button @click="actualizarEstadoTarea(true, tarea)"
                                 class="btn btn-primary btn-xs">
                             <span class="glyphicon glyphicon-ok"></span></button>
-                        <button @click="tarea.completado = false"
+                        <button @click="actualizarEstadoTarea(false, tarea)"
                                 class="btn btn-primary btn-xs">
                             <span class="glyphicon glyphicon-repeat"></span>
                         </button>
-                        <button @click="eliminarTarea($index)"
+                        <button @click="eliminarTarea(tarea)"
                                 class="btn btn-danger btn-xs">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
@@ -67,6 +67,7 @@
     </div>
 </template>
 <script src="https://cdn.jsdelivr.net/vue/1.0.24/vue.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
