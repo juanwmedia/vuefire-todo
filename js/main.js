@@ -6,7 +6,9 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var db = firebase.database();
+var db = firebase.database(),
+    auth = firebase.auth(),
+    proveedor = new firebase.auth.GoogleAuthProvider();
 
 Vue.component('todo-list', {
     template: '#todo-template',
@@ -16,11 +18,15 @@ Vue.component('todo-list', {
             editandoTarea: null,
         }
     },
-    props: ['tareas'],
+    props: ['tareas', 'autentificado', 'usuarioActivo'],
     methods: {
         agregarTarea: function (tarea) {
             db.ref('tareas/').push({
-                titulo: tarea, completado: false
+                titulo: tarea,
+                completado: false,
+                nombre: vm.usuarioActivo.displayName,
+                avatar: vm.usuarioActivo.photoURL,
+                uid: vm.usuarioActivo.uid,
             });
             this.nuevaTarea = '';
         },
@@ -31,7 +37,7 @@ Vue.component('todo-list', {
         },
         actualizarEstadoTarea: function (estado, tarea) {
             db.ref('tareas/' + tarea['.key']).update({
-               completado: estado ? true : false,
+                completado: estado ? true : false,
             });
         },
         eliminarTarea: function (tarea) {
@@ -43,6 +49,7 @@ Vue.component('todo-list', {
 var vm = new Vue({
     el: 'body',
     ready: function () {
+        // RT database
         db.ref('tareas/').on('value', function (snapshot) {
             vm.tareas = [];
             var objeto = snapshot.val();
@@ -50,12 +57,42 @@ var vm = new Vue({
                 vm.tareas.unshift({
                     '.key': propiedad,
                     completado: objeto[propiedad].completado,
-                    titulo: objeto[propiedad].titulo
+                    titulo: objeto[propiedad].titulo,
+                    avatar: objeto[propiedad].avatar,
+                    nombre: objeto[propiedad].nombre,
+                    uid: objeto[propiedad].uid,
                 });
+            }
+        });
+
+        // Auth
+        auth.onAuthStateChanged(function (user) {
+            if (user) {
+                console.info('Conectado: ', user);
+                vm.autentificado = true;
+                vm.usuarioActivo = user;
+            } else {
+                console.warn('No conectado');
+                vm.autentificado = false;
+                vm.usuarioActivo = null;
             }
         });
     },
     data: {
-        tareas: []
+        autentificado: false,
+        usuarioActivo: null,
+        tareas: [],
     },
+    methods: {
+        conectar: function () {
+            firebase.auth().signInWithPopup(proveedor).catch(function (error) {
+                console.error('Error haciendo logIn: ', error);
+            });
+        },
+        desconectar: function () {
+            firebase.auth().signOut().catch(function (error) {
+                console.error('Error haciendo logOut: ', error);
+            });
+        }
+    }
 });

@@ -8,3 +8,32 @@
     font-style: italic;
     color: gray;
 }
+
+.navbar-login
+{
+    width: 305px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navbar-login-session
+{
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.icon-size
+{
+    font-size: 87px;
+}
+
+small {
+    font-size:11px;
+}
+
+.avatar {
+    width: 32px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
